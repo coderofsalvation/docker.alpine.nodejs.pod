@@ -1,0 +1,25 @@
+#!/bin/bash
+if [[ -n $BUILD ]]; then 
+  which powscript || {
+    wget "https://raw.githubusercontent.com/coderofsalvation/powscript/master/powscript" 
+    export PATH=$PATH:$(pwd);
+  }
+
+  powscript --compile install/src/install.pow > install/install
+  powscript --compile boot/src/boot.pow > boot/boot
+  docker build --no-cache -t nodepod .
+fi
+if [[ -n $RUN ]]; then
+  set -x
+  docker run -i -v $(pwd)/srv:/srv        \
+    -v $(pwd)/.ssh:/home/nodejs/.ssh      \
+    -v $(pwd)/.podrc:/home/nodejs/.podrc  \
+    -v $(pwd)/.ssh.etc:/etc/ssh           \
+    -e ROOTPASSWD=test                    \
+    -e PASSWD=test                        \
+    -e HOSTNAME=nodepod                   \
+    -p 22:22                              \
+    -p 81:80                              \
+    -p 19999:19999                        \
+    -t nodepod
+fi

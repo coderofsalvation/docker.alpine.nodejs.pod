@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+DAEMON=sshd
+
+install_ssh(group,user)
+  which sshd || apk add openssh
+  touch /home/$user/.ssh/authorized_keys
+  chmod 700 /home/$user/.ssh/authorized_keys
+  chown $user:$group -R /home/$user/.ssh
+  # Fix permissions, if writable
+  #if -w ~/.ssh
+  #    chown -R root:root ~/.ssh && chmod 700 ~/.ssh/ && chmod 600 ~/.ssh/*
+
+ssh_stop()
+  echo "Received SIGINT or SIGTERM. Shutting down $DAEMON"
+  # Get PID
+  pid=$(cat /var/run/$DAEMON/$DAEMON.pid)
+  # Set TERM
+  kill -SIGTERM "${pid}"
+  # Wait for exit
+  wait "${pid}"
+  # All done.
+  echo "Done."
+
+
+ssh_start() 
+  # generate ssh config in not present
+  if not -f /etc/ssh/sshd_config
+    ssh-keygen -A
+    # open ssh port 22
+    echo -e "Port 22\n" >> /etc/ssh/sshd_config
+  echo "starting ssh"
+  trap ssh_stop SIGINT SIGTERM
+  echo /usr/sbin/sshd -D -f /etc/ssh/sshd_config
+  exec /usr/sbin/sshd -D -f /etc/ssh/sshd_config
+  pid="$!"
+  mkdir -p /var/run/$DAEMON && echo "${pid}" > /var/run/$DAEMON/$DAEMON.pid
+  wait "${pid}" && exit $?

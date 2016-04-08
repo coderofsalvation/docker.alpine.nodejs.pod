@@ -1,0 +1,20 @@
+require 'ssh.pow'
+
+if not -n $PASSWD
+  echo "please pass '-e PASSWD=foo' to your docker cmd"
+if not -n $ROOTPASSWD
+  echo "please pass '-e ROOTPASSWD=foo' to your docker cmd"
+
+# set pw
+echo "root:$ROOTPASSWD" | chpasswd
+echo "nodejs:$PASSWD" | chpasswd
+
+chown nodejs:nodejs -R /srv
+
+ssh_start &
+
+su -c "$(which node) $(which pod) startall &" nodejs
+su -c "$(which pm2) logs" nodejs
+sleep 3s
+su -c "$(which pod) web start &" nodejs
+

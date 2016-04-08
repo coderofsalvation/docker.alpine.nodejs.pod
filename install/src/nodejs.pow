@@ -1,0 +1,25 @@
+#!/bin/bash
+
+motd='
+  POD nodejs
+'
+echo "$motd" > /etc/motd
+
+
+## add nodejs 
+if grep -q ARM /proc/cpuinfo
+	apk add c-ares libstdc++ libuv
+	cd /
+	curl -L "https://github.com/coderofsalvation/alpine-node-arm/raw/master/node-v4.1.1-armhf-alpinelinux.tar.gz" > node-v4.1.1-armhf-alpinelinux.tar.gz
+	tar -zxvf node-v4.1.1-armhf-alpinelinux.tar.gz
+	rm node-v4.1.1-armhf-alpinelinux.tar.gz
+  [[ ! -n /usr/bin/node ]] && ln -s /usr/local/bin/node /usr/bin/.
+  [[ ! -n /usr/bin/npm  ]] && ln -s /usr/local/bin/npm /usr/bin/.
+else 
+  apk add nodejs
+
+npm update 
+
+# create nodejs user with same pw
+addgroup nodejs
+adduser -s /bin/bash -G nodejs nodejs -s /bin/bash -D

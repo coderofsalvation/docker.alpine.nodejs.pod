@@ -1,0 +1,84 @@
+#!/bin/bash
+set -e                 # halt on error
+set +m                 #
+shopt -s lastpipe      # flexible while loops (maintain scope)
+shopt -s extglob       # regular expressions
+path="$(pwd)"
+selfpath="$( dirname "$(readlink -f "$0")" )"
+tmpfile="/tmp/$(basename $0).tmp.$(whoami)"
+
+DAEMON=sshd
+
+install_ssh(){
+  local group="$1"
+  local user="$2"
+  which sshd || apk add openssh
+  touch /home/$user/.ssh/authorized_keys
+  chmod 700 /home/$user/.ssh/authorized_keys
+  chown "$user":$group -R /home/$user/.ssh
+  # Fix permissions, if writable
+  #if -w ~/.ssh
+  #    chown -R root:root ~/.ssh && chmod 700 ~/.ssh/ && chmod 600 ~/.ssh/*
+}
+
+ssh_stop(){
+  echo "Received SIGINT or SIGTERM. Shutting down "$DAEMON""
+  # Get PID
+  pid=$(cat /var/run/$DAEMON/$DAEMON.pid)
+  # Set TERM
+  kill -SIGTERM "${pid}"
+  # Wait for exit
+  wait "${pid}"
+  # All done.
+  echo "Done."
+}
+
+
+ssh_start() {
+  # generate ssh config in not present
+  if [[ ! -f /etc/ssh/sshd_config ]]; then
+    ssh-keygen -A
+    # open ssh port 22
+    echo -e "Port 22\n" >> /etc/ssh/sshd_config
+  fi
+  echo "starting ssh"
+  trap ssh_stop SIGINT SIGTERM
+  echo /usr/sbin/sshd -D -f /etc/ssh/sshd_config
+  exec /usr/sbin/sshd -D -f /etc/ssh/sshd_config
+  pid="$!"
+  mkdir -p /var/run/$DAEMON && echo "${pid}" > /var/run/$DAEMON/$DAEMON.pid
+  wait "${pid}" && exit $?
+}
+
+
+
+if [[ ! -n "$PASSWD" ]]; then
+  echo "please pass '-e PASSWD=foo' to your docker cmd"
+fi
+if [[ ! -n "$ROOTPASSWD" ]]; then
+  echo "please pass '-e ROOTPASSWD=foo' to your docker cmd"
+fi
+
+echo "root:$ROOTPASSWD" | chpasswd
+echo "nodejs:$PASSWD" | chpasswd
+
+chown nodejs:nodejs -R /srv
+
+ssh_start &
+
+su -c "$(which node) $(which pod) startall &" nodejs
+su -c "$(which pm2) logs" nodejs
+sleep 3s
+su -c "$(which pod) web start &" nodejs
+
+# wait for all async child processes (because "await ... then" is used in powscript)
+[[ $ASYNC == 1 ]] && wait
+
+
+# cleanup tmp files
+if ls /tmp/$(basename $0).tmp.docker* &>/dev/null; then
+  for f in /tmp/$(basename $0).tmp.docker*; do rm $f; done
+fi
+
+exit 0
+

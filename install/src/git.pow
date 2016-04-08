@@ -1,0 +1,4 @@
+install_git(name,username,group)
+  apk add --update git
+  echo -e "[user]\n\tname = $name\n\temail = noreply@$name" > /home/$username/.gitconfig
+  chown $username:$group /home/$username/.gitconfig
