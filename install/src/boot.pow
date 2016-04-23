@@ -17,4 +17,3 @@ su -c "$(which node) $(which pod) startall &" nodejs
 su -c "$(which pm2) logs" nodejs
 sleep 3s
 su -c "$(which pod) web start &" nodejs
-

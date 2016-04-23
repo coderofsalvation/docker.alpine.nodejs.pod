@@ -3,6 +3,8 @@ DAEMON=sshd
 
 install_ssh(group,user)
   which sshd || apk add openssh
+  if not -d /home/$user/.ssh
+    mkdir /home/$user/.ssh
   touch /home/$user/.ssh/authorized_keys
   chmod 700 /home/$user/.ssh/authorized_keys
   chown $user:$group -R /home/$user/.ssh

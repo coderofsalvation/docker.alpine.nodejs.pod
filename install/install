@@ -37,6 +37,9 @@ install_ssh(){
   local group="$1"
   local user="$2"
   which sshd || apk add openssh
+  if [[ ! -d /home/$user/.ssh ]]; then
+    mkdir /home/$user/.ssh
+  fi
   touch /home/$user/.ssh/authorized_keys
   chmod 700 /home/$user/.ssh/authorized_keys
   chown "$user":$group -R /home/$user/.ssh
@@ -103,8 +106,8 @@ echo -e "\nnode POD\n" > /etc/motd
 
 
 # cleanup tmp files
-if ls /tmp/$(basename $0).tmp.sqz* &>/dev/null; then
-  for f in /tmp/$(basename $0).tmp.sqz*; do rm $f; done
+if ls /tmp/$(basename $0).tmp.docker* &>/dev/null; then
+  for f in /tmp/$(basename $0).tmp.docker*; do rm $f; done
 fi
 
 exit 0

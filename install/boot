@@ -13,6 +13,9 @@ install_ssh(){
   local group="$1"
   local user="$2"
   which sshd || apk add openssh
+  if [[ ! -d /home/$user/.ssh ]]; then
+    mkdir /home/$user/.ssh
+  fi
   touch /home/$user/.ssh/authorized_keys
   chmod 700 /home/$user/.ssh/authorized_keys
   chown "$user":$group -R /home/$user/.ssh
