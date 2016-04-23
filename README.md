@@ -1,6 +1,25 @@
 # Pod (microservices) docker
 
-Easy git push deploy & microservice architecture in a docker.
+Easy git push deploy (& microservice architecture) in a docker.
+
+## Usage 
+
+look at [build](build) 
+
+    $ BUILD=1 RUN=1 ./build
+    + docker build -t nodepod .
+    + docker run -it --volume=/home/username/docker.nodejs.pod/srv:/srv --volume=/home/username/docker.nodejs.pod/.ssh:/home/nodejs/.ssh --volume=/home/username/docker.nodejs.pod/.podrc:/home/nodejs/.podrc --volume=/home/username/docker.nodejs.pod/.ssh.etc:/etc/ssh --env=ROOTPASSWD=test --env=PASSWD=test --env=HOSTNAME=nodepod -p 23:22 -p 81:8080 -p 19999:19999 --name=nodepod nodepod
+
+This will build and run a docker which has pod & ssh pre-installed.
+
+if the image build, you can try running it as well
+For testing purposes, a nice build-run-login workflow can be achieved like so:
+
+    $ BUILD=1 RUN=1 LOGIN=1 ./build 
+
+## Read this if you like easy-peasy microservices 
+
+This is what you can get by adding one environmentvariable:
 
 
                            bb/github   gitrepo        pod REST       pod web  
