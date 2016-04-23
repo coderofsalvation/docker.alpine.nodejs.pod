@@ -1,0 +1,9 @@
+if -n $QUEUE
+  if ! -d /srv/apps/queue
+    echo installing queue
+    cd /srv/apps
+    git clone https://github.com/ajlopez/SimpleQueue queue
+    cd queue
+    npm install --production
+  su -c 'pod start queue' nodejs
+

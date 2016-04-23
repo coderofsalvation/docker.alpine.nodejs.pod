@@ -13,23 +13,12 @@ chown nodejs:nodejs -R /srv
 
 ssh_start &
 
-if -n $PROXY
-  if ! -d /srv/apps/proxy 
-    echo installing proxy
-    cd /srv/apps
-    git clone https://github.com/goddyZhao/nproxy proxy
-    cd proxy
-    npm install --production
-  su -c 'pod start proxy' nodejs
+if -n MICROSERVICES
+  BUS=1 PROXY=1 QUEUE=1
 
-if -n $QUEUE
-  if ! -d /srv/apps/queue
-    echo installing queue
-    cd /srv/apps
-    git clone https://github.com/ajlopez/SimpleQueue queue
-    cd queue
-    npm install --production
-  su -c 'pod start queue' nodejs
+require 'nodejs-proxy.pow'
+require 'nodejs-queue.pow'
+require 'nodejs-bus.pow'
 
 su -c "$(which node) $(which pod) startall &" nodejs
 su -c "$(which pm2) logs" nodejs

@@ -1,0 +1,8 @@
+if -n $PROXY
+  if ! -d /srv/apps/proxy 
+    echo installing proxy
+    cd /srv/apps
+    git clone https://github.com/goddyZhao/nproxy proxy
+    cd proxy
+    npm install --production
+  su -c 'pod start proxy' nodejs

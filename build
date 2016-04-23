@@ -1,5 +1,6 @@
 #!/bin/bash
 export PATH=$PATH:$(pwd);
+[[ -n $MICROSERVICES ]] && PROXY=1 BUS=1 QUEUE=1
 if [[ -n $BUILD ]]; then 
   which powscript || {
     wget "https://raw.githubusercontent.com/coderofsalvation/powscript/master/powscript" 
@@ -12,14 +13,18 @@ if [[ -n $BUILD ]]; then
 fi
 if [[ -n $RUN ]]; then
   set -x
-  [[ -n $PROXY ]] && PODRC=.podrc.proxy || PODRC=.podrc
-  [[ -n $SHELL ]] && BG="" || BG=d
+  [[ -n $MICROSERVICES ]] && rm -rf srv/apps/{bus,queue,proxy}
+  [[ -n $PROXY ]] && PODRC=.podrc.microservices || PODRC=.podrc
+  [[ -n $SHELL ]] && BG="d" || BG=""
   docker kill nodepod && docker rm nodepod; 
   docker run -it$BG                                  \
     --volume=$(pwd)/srv:/srv                         \
     --volume=$(pwd)/.ssh:/home/nodejs/.ssh           \
     --volume=$(pwd)/$PODRC:/home/nodejs/.podrc       \
     --volume=$(pwd)/.ssh.etc:/etc/ssh                \
+    --env=QUEUE=$QUEUE                               \
+    --env=PROXY=$PROXY                               \
+    --env=BUS=$BUS                                   \
     --env=ROOTPASSWD=test                            \
     --env=PASSWD=test                                \
     --env=HOSTNAME=nodepod                           \

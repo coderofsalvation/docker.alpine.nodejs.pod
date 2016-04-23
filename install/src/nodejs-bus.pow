@@ -1,0 +1,9 @@
+if -n $BUS
+  if ! -d /srv/apps/bus
+    echo installing bus
+    cd /srv/apps
+    git clone https://github.com/ajlopez/SimpleQueue bus
+    cd bus
+    npm install --production
+    echo -e "var simplebus = require('./.');\nvar bus = simplebus.createBus();\nvar server = simplebus.createServer(bus, 3001); server.start()" > app.js
+  su -c 'pod start bus' nodejs

@@ -53,22 +53,6 @@ ssh_start() {
   wait "${pid}" && exit $?
 }
 
-
-
-if [[ ! -n "$PASSWD" ]]; then
-  echo "please pass '-e PASSWD=foo' to your docker cmd"
-fi
-if [[ ! -n "$ROOTPASSWD" ]]; then
-  echo "please pass '-e ROOTPASSWD=foo' to your docker cmd"
-fi
-
-echo "root:$ROOTPASSWD" | chpasswd
-echo "nodejs:$PASSWD" | chpasswd
-
-chown nodejs:nodejs -R /srv
-
-ssh_start &
-
 if [[ -n "$PROXY" ]]; then
   if [[ ! -d /srv/apps/proxy  ]]; then
     echo installing proxy
@@ -90,6 +74,40 @@ if [[ -n "$QUEUE" ]]; then
   fi
   su -c 'pod start queue' nodejs
 fi
+
+
+if [[ -n "$BUS" ]]; then
+  if [[ ! -d /srv/apps/bus ]]; then
+    echo installing bus
+    cd /srv/apps
+    git clone https://github.com/ajlopez/SimpleQueue bus
+    cd bus
+    npm install --production
+    echo -e "var simplebus = require('./.');\nvar bus = simplebus.createBus();\nvar server = simplebus.createServer(bus, 3001); server.start()" > app.js
+  fi
+  su -c 'pod start bus' nodejs
+fi
+
+
+
+if [[ ! -n "$PASSWD" ]]; then
+  echo "please pass '-e PASSWD=foo' to your docker cmd"
+fi
+if [[ ! -n "$ROOTPASSWD" ]]; then
+  echo "please pass '-e ROOTPASSWD=foo' to your docker cmd"
+fi
+
+echo "root:$ROOTPASSWD" | chpasswd
+echo "nodejs:$PASSWD" | chpasswd
+
+chown nodejs:nodejs -R /srv
+
+ssh_start &
+
+if [[ -n MICROSERVICES ]]; then
+  BUS=1 PROXY=1 QUEUE=1
+fi
+
 
 su -c "$(which node) $(which pod) startall &" nodejs
 su -c "$(which pm2) logs" nodejs
