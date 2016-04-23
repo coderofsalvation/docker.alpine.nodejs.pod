@@ -88,7 +88,7 @@ to preinstall a http proxy in pod, make sure:
 ## optional: queue 
 
 [Lightweight queue](https://npmjs.org/package/simplequeue) which allows microservices to act as distributed producers/consumers.
-It runs at port 3000, and all messages are removed using `pod restart queue.
+It runs at port 3000, and all messages are removed using `pod restart queue`.
 
 * [example producer .js code](https://github.com/ajlopez/SimpleQueue/blob/master/samples/DistributedProducerConsumer/producer.js)
 * [example consumer .js code](https://github.com/ajlopez/SimpleQueue/blob/master/samples/DistributedProducerConsumer/consumer.js)
