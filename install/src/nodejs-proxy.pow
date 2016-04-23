@@ -5,4 +5,3 @@ if -n $PROXY
     git clone https://github.com/goddyZhao/nproxy proxy
     cd proxy
     npm install --production
-  su -c 'pod start proxy' nodejs

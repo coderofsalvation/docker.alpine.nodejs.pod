@@ -15,7 +15,7 @@ if [[ -n $RUN ]]; then
   set -x
   [[ -n $MICROSERVICES ]] && rm -rf srv/apps/{bus,queue,proxy}
   [[ -n $PROXY ]] && PODRC=.podrc.microservices || PODRC=.podrc
-  [[ -n $SHELL ]] && BG="d" || BG=""
+  [[ -n $LOGIN ]] && BG="d" || BG=""
   docker kill nodepod && docker rm nodepod; 
   docker run -it$BG                                  \
     --volume=$(pwd)/srv:/srv                         \
@@ -33,7 +33,7 @@ if [[ -n $RUN ]]; then
     -p 19999:19999                                   \
     --name=nodepod                                   \
     nodepod
-  if [[ -n $SHELL ]]; then 
+  if [[ -n $LOGIN ]]; then 
     docker exec -it nodepod /bin/bash
   fi
 fi

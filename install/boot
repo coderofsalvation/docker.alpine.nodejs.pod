@@ -61,7 +61,6 @@ if [[ -n "$PROXY" ]]; then
     cd proxy
     npm install --production
   fi
-  su -c 'pod start proxy' nodejs
 fi
 
 if [[ -n "$QUEUE" ]]; then
@@ -72,20 +71,17 @@ if [[ -n "$QUEUE" ]]; then
     cd queue
     npm install --production
   fi
-  su -c 'pod start queue' nodejs
 fi
-
 
 if [[ -n "$BUS" ]]; then
   if [[ ! -d /srv/apps/bus ]]; then
     echo installing bus
     cd /srv/apps
-    git clone https://github.com/ajlopez/SimpleQueue bus
+    git clone https://github.com/ajlopez/SimpleBus bus
     cd bus
     npm install --production
-    echo -e "var simplebus = require('./.');\nvar bus = simplebus.createBus();\nvar server = simplebus.createServer(bus, 3001); server.start()" > app.js
+    echo -e "var simplebus = require('./.');\nvar bus = simplebus.createBus();\nvar server = simplebus.createServer(bus, 3001);\nserver.start()" > app.js
   fi
-  su -c 'pod start bus' nodejs
 fi
 
 
@@ -110,9 +106,19 @@ fi
 
 
 su -c "$(which node) $(which pod) startall &" nodejs
-su -c "$(which pm2) logs" nodejs
+su -c "$(which pm2) logs &" nodejs
 sleep 3s
 su -c "$(which pod) web start &" nodejs
+
+if [[ -n "$BUS" ]]; then
+  su -c 'pod start bus' nodejs
+fi
+if [[ -n "$PROXY" ]]; then
+  su -c 'pod start proxy' nodejs
+fi
+if [[ -n "$QUEUE" ]]; then
+  su -c 'pod start queue' nodejs
+fi
 
 # wait for all async child processes (because "await ... then" is used in powscript)
 [[ $ASYNC == 1 ]] && wait
