@@ -12,11 +12,6 @@ look at [build](build)
 
 This will build and run a docker which has pod & ssh pre-installed.
 
-if the image build, you can try running it as well
-For testing purposes, a nice build-run-login workflow can be achieved like so:
-
-    $ BUILD=1 RUN=1 LOGIN=1 ./build 
-
 ## Read this if you like easy-peasy microservices 
 
 This is what you can get by adding one environmentvariable:
