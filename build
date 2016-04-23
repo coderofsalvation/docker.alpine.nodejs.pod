@@ -14,7 +14,7 @@ fi
 if [[ -n $RUN ]]; then
   set -x
   [[ -n $MICROSERVICES ]] && rm -rf srv/apps/{bus,queue,proxy}
-  [[ -n $PROXY ]] && PODRC=.podrc.microservices || PODRC=.podrc
+  [[ -n $MICROSERVICES ]] && PODRC=.podrc.microservices || PODRC=.podrc
   [[ -n $LOGIN ]] && BG="d" || BG=""
   docker kill nodepod && docker rm nodepod; 
   docker run -it$BG                                  \
@@ -22,6 +22,7 @@ if [[ -n $RUN ]]; then
     --volume=$(pwd)/.ssh:/home/nodejs/.ssh           \
     --volume=$(pwd)/$PODRC:/home/nodejs/.podrc       \
     --volume=$(pwd)/.ssh.etc:/etc/ssh                \
+    --env=MICROSERVICES=$MICROSERVICES               \
     --env=QUEUE=$QUEUE                               \
     --env=PROXY=$PROXY                               \
     --env=BUS=$BUS                                   \
