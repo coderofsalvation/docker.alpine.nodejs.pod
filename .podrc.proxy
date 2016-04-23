@@ -1,0 +1,24 @@
+{
+    "root": "/srv",
+    "node_env": "development",
+    "default_script": "app.js",
+    "apps": {
+        "proxy": {
+            "remote": "https://github.com/goddyZhao/nproxy",
+            "script": "/srv/apps/proxy/bin/nproxy",
+            "port":8989,
+	    "args": "['-l','/srv/apps/proxy/replace-rule.sample.js']"
+        },
+	"queue": {
+	    "remote": "https://github.com/ajlopez/SimpleQueue",
+	    "script": "/srv/apps/queue/samples/DistributedProducerConsumer/server.js",
+            "port":3000	
+	}
+    },
+    "web": {
+        "username": "admin",
+        "password": "test",
+        "port": 19999,
+        "jsonp": true
+    }
+}

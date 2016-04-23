@@ -12,16 +12,23 @@ if [[ -n $BUILD ]]; then
 fi
 if [[ -n $RUN ]]; then
   set -x
-  docker run -itd \
-    --volume=$(pwd)/srv:/srv        \
-    --volume=$(pwd)/.ssh:/home/nodejs/.ssh      \
-    --volume=$(pwd)/.podrc:/home/nodejs/.podrc  \
-    --volume=$(pwd)/.ssh.etc:/etc/ssh           \
-    --env=ROOTPASSWD=test                    \
-    --env=PASSWD=test                        \
-    --env=HOSTNAME=nodepod                   \
-    -p 23:22                              \
-    -p 81:80                              \
-    -p 19999:19999                        \
+  [[ -n $PROXY ]] && PODRC=.podrc.proxy || PODRC=.podrc
+  [[ -n $SHELL ]] && BG="" || BG=d
+  docker kill nodepod && docker rm nodepod; 
+  docker run -it$BG                                  \
+    --volume=$(pwd)/srv:/srv                         \
+    --volume=$(pwd)/.ssh:/home/nodejs/.ssh           \
+    --volume=$(pwd)/$PODRC:/home/nodejs/.podrc       \
+    --volume=$(pwd)/.ssh.etc:/etc/ssh                \
+    --env=ROOTPASSWD=test                            \
+    --env=PASSWD=test                                \
+    --env=HOSTNAME=nodepod                           \
+    -p 23:22                                         \
+    -p 81:8080                                       \
+    -p 19999:19999                                   \
+    --name=nodepod                                   \
     nodepod
+  if [[ -n $SHELL ]]; then 
+    docker exec -it nodepod /bin/bash
+  fi
 fi

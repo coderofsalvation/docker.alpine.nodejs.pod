@@ -4,6 +4,7 @@ FROM alpine:3.2
 MAINTAINER Coder Of Salvation <info@leon.vankammen.eu>
 
 ENV VERSION=v4.1.1
+ENV PROXY=1 
 
 ADD install /install
 

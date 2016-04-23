@@ -9,14 +9,8 @@ require 'git.pow'
 install_git nodepod nodejs nodejs
 install_ssh nodejs nodejs
 
-#if not -d /srv
-#  echo "creating /srv"
-#  mkdir -p /srv/apps /srv/repos
 ln -fs /srv/apps /home/nodejs/.
 npm install -g pod
-ln -s /root/.npm /home/nodejs/.npm
-chown -R nodejs:nodejs /root/.npm
-
-pod remote proxy https://github.com/coderofsalvation/ndg-proxy.git
+ln -s /home/nodejs/.podrc /root/.podrc
 
 echo -e "\nnode POD\n" > /etc/motd

@@ -4,7 +4,7 @@
     "default_script": "app.js",
     "apps": {
         "proxy": {
-            "remote": "https://github.com/coderofsalvation/ndg-proxy.git"
+            "remote": "https://github.com/goddyZhao/nproxy"
         }
     },
     "web": {

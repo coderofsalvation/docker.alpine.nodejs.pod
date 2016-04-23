@@ -69,6 +69,28 @@ chown nodejs:nodejs -R /srv
 
 ssh_start &
 
+if [[ -n "$PROXY" ]]; then
+  if [[ ! -d /srv/apps/proxy  ]]; then
+    echo installing proxy
+    cd /srv/apps
+    git clone https://github.com/goddyZhao/nproxy proxy
+    cd proxy
+    npm install --production
+  fi
+  su -c 'pod start proxy' nodejs
+fi
+
+if [[ -n "$QUEUE" ]]; then
+  if [[ ! -d /srv/apps/queue ]]; then
+    echo installing queue
+    cd /srv/apps
+    git clone https://github.com/ajlopez/SimpleQueue queue
+    cd queue
+    npm install --production
+  fi
+  su -c 'pod start queue' nodejs
+fi
+
 su -c "$(which node) $(which pod) startall &" nodejs
 su -c "$(which pm2) logs" nodejs
 sleep 3s
@@ -79,8 +101,8 @@ su -c "$(which pod) web start &" nodejs
 
 
 # cleanup tmp files
-if ls /tmp/$(basename $0).tmp.docker* &>/dev/null; then
-  for f in /tmp/$(basename $0).tmp.docker*; do rm $f; done
+if ls /tmp/$(basename $0).tmp.sqz* &>/dev/null; then
+  for f in /tmp/$(basename $0).tmp.sqz*; do rm $f; done
 fi
 
 exit 0
