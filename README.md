@@ -50,7 +50,7 @@ A bit of bash tells a thousands words:
     > --env=PASSWD=test                                        
     > --env=HOSTNAME=nodepod                                   
     > -p 23:22                                                 
-    > -p 81:8080
+    > -p 81:8989
     > -p 19999:19999                                           
     > nodepod                                                  
 
