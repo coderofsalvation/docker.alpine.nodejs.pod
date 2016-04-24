@@ -1,4 +1,8 @@
 require 'ssh.pow'
+require 'microservices.pow'
+require 'nodejs-proxy.pow'
+require 'nodejs-queue.pow'
+require 'nodejs-bus.pow'
 
 if not -n $PASSWD
   echo "please pass '-e PASSWD=foo' to your docker cmd"
@@ -12,13 +16,6 @@ echo "nodejs:$PASSWD" | chpasswd
 chown nodejs:nodejs -R /srv
 
 ssh_start &
-
-if -n MICROSERVICES
-  BUS=1 PROXY=1 QUEUE=1
-
-require 'nodejs-proxy.pow'
-require 'nodejs-queue.pow'
-require 'nodejs-bus.pow'
 
 su -c "$(which node) $(which pod) startall &" nodejs
 su -c "$(which pm2) logs &" nodejs

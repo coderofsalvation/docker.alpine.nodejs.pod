@@ -53,6 +53,10 @@ ssh_start() {
   wait "${pid}" && exit $?
 }
 
+if [[ -n "$MICROSERVICES" ]]; then
+  QUEUE=1 PROXY=1 BUS=1
+fi
+
 if [[ -n "$PROXY" ]]; then
   if [[ ! -d /srv/apps/proxy  ]]; then
     echo installing proxy
@@ -104,11 +108,6 @@ echo "nodejs:$PASSWD" | chpasswd
 chown nodejs:nodejs -R /srv
 
 ssh_start &
-
-if [[ -n MICROSERVICES ]]; then
-  BUS=1 PROXY=1 QUEUE=1
-fi
-
 
 su -c "$(which node) $(which pod) startall &" nodejs
 su -c "$(which pm2) logs &" nodejs

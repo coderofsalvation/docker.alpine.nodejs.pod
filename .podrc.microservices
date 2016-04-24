@@ -7,7 +7,7 @@
             "remote": "https://github.com/goddyZhao/nproxy",
             "script": "/srv/apps/proxy/bin/nproxy",
             "port":8989,
-      	    "args": "['-l','/srv/apps/proxy/replace-rule.sample.js']"
+      	    "args": ["-l","/srv/apps/proxy/replace-rule.sample.js"]
         },
         "queue": {
             "remote": "https://github.com/smrchy/rest-rsmq",
