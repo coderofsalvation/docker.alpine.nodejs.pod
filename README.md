@@ -46,7 +46,6 @@ A bit of bash tells a thousands words:
     > --volume=$(pwd)/.podrc.microservices:/home/nodejs/.podrc 
     > --volume=$(pwd)/.ssh.etc:/etc/ssh                        
     > --env=ROOTPASSWD=test                                    
-    > --env=PROXY=1                                            
     > --env=MICROSERVICES=1                                    
     > --env=PASSWD=test                                        
     > --env=HOSTNAME=nodepod                                   
