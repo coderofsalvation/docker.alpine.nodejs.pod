@@ -76,29 +76,30 @@ voila!
 
 > if this didn't make sense, please read the [pod docs](https://github.com/yyx990803/pod#using-a-remote-github-repo)
 
-## optional: http proxy
+## http proxy
 
 The [proxy](https://npmjs.org/package/nproxy) runs on port 8989.
 to preinstall a http proxy in pod, make sure:
 
 * `ENV PROXY=1` is set in Dockerfile before building
 * `--volume=$(pwd)/.podrc.microservices:/home/nodejs/.podrc` is passed in `docker run` instead of `.podrc`
-* run `ln -s srv/apps/proxy/replace-rule.sample.js proxy.js` for convenience editing (in combination with `pod restart proxy`)
+* run `ln -s srv/apps/proxy/replace-rule.sample.js proxy.js` outside the docker for convenience editing
+* use `pod restart proxy` to reload the proxy
 
-## optional: queue 
+## queue 
 
-[Lightweight queue](https://npmjs.org/package/simplequeue) which allows microservices to act as distributed producers/consumers.
-It runs at port 3000, and all messages are removed using `pod restart queue`.
+[Lightweight queue](https://npmjs.org/package/rsmq) which allows microservices to act as distributed producers/consumers.
+It uses redis at port 6379, has a cli (`queue --help`) and a [REST api](https://npmjs.org/package/rest-rsmq) at port 3000.
 
-* [example producer .js code](https://github.com/ajlopez/SimpleQueue/blob/master/samples/DistributedProducerConsumer/producer.js)
-* [example consumer .js code](https://github.com/ajlopez/SimpleQueue/blob/master/samples/DistributedProducerConsumer/consumer.js)
+* [example producer .js code](https://npmjs.org/package/rsmq)
+* [example consumer .js code](https://npmjs.org/package/rsmq-worker)
 
-> Note: this is just a simple queue. More advanced scenarios require other tools (rabbitmq in seperate docker etc).
-
-## optional: pub/sub bus
+## pub/sub bus
 
 [Lightweight pub/sub bus](https://npmjs.org/package/simplebus) which allows microservices to act as distributed publishers/subscribers.
 It runs at port 3001.
 
 * [example publisher ,js code](https://github.com/ajlopez/SimpleBus/blob/master/samples/Market/operator.js)
 * [example subscriber .js code](https://github.com/ajlopez/SimpleBus/blob/master/samples/Market/subscriber.js)
+
+> NOTE: redis can also be used for pub/sub behaviour

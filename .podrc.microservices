@@ -10,8 +10,8 @@
       	    "args": "['-l','/srv/apps/proxy/replace-rule.sample.js']"
         },
         "queue": {
-            "remote": "https://github.com/ajlopez/SimpleQueue",
-            "script": "/srv/apps/queue/samples/DistributedProducerConsumer/server.js",
+            "remote": "https://github.com/smrchy/rest-rsmq",
+            "script": "/srv/apps/queue/server.js",
             "port":3000	
         },
         "bus": {

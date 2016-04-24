@@ -1,7 +1,12 @@
 if -n $QUEUE
   if ! -d /srv/apps/queue
     echo installing queue
+    apk add redis
     cd /srv/apps
-    git clone https://github.com/ajlopez/SimpleQueue queue
+    git clone https://github.com/smrchy/rest-rsmq queue
     cd queue
+    sed -i 's/8101/3000/g' server.js
     npm install --production
+    npm install rsmq-cli
+    ln -s $(pwd)/node_modules/.bin/rsmq /usr/bin/queue
+  redis-server & 
