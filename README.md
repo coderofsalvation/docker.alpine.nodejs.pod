@@ -11,6 +11,10 @@ look at [build](build)
     + docker run -it --volume=/home/username/docker.nodejs.pod/srv:/srv --volume=/home/username/docker.nodejs.pod/.ssh:/home/nodejs/.ssh --volume=/home/username/docker.nodejs.pod/.podrc:/home/nodejs/.podrc --volume=/home/username/docker.nodejs.pod/.ssh.etc:/etc/ssh --env=ROOTPASSWD=test --env=PASSWD=test --env=HOSTNAME=nodepod -p 23:22 -p 81:8080 -p 19999:19999 --name=nodepod nodepod
 
 This will build and run a docker which has pod & ssh pre-installed.
+    
+    $ RUN=1 MICROSERVICES=1 BUILD=1 LOGIN=1 ./build 
+
+> if you just want a plain pod: Leave out `MICROSERVICES=1` and remove the `.microservices'-part from the `.podrc` volume
 
 ## Read this if you like easy-peasy microservices 
 
@@ -54,24 +58,39 @@ A bit of bash tells a thousands words:
     > -p 19999:19999                                           
     > nodepod                                                  
 
-    $ docker exec -it nodepod /bin/bash
+    $ ssh -p 23 nodejs@localhost pod list 
+    Password: test
 
-or for testing purposes simply run all together using:
+      name       status      port      restarts      uptime           memory        CPU   
 
-    $ BUILD=1 RUN=1 MICROSERVICES=1 BUILD=1 ./build 
+      proxy      ON          8989      1             00:45:44         31.00 mb      0.00% 
+      queue      ON          3000      0             2d 05:54:52      58.24 mb      0.00% 
+      bus        ON          3001      0             2d 05:54:54      31.30 mb      0.00% 
 
-> if you just want a plain pod: Leave out `MICROSERVICES=1` and remove the `.microservices'-part from the `.podrc` volume
+## creating & deploygin  a new microservice
 
-## creating a new microservice
+Create remote repo
 
+    $ ssh -p 23 nodejs@localhost pod create myapp
+    POD updated config.
+    POD created bare repo at /srv/repos/myapp.git
+    POD created post-receive hook.
+    POD created empty working copy at /srv/apps/myapp
 
-* create a new nodejs container using the `pod create` command
-* pull the repo to your local machine
-* run `npm install simplequeue simplebus --save`
-* `git add` the files
-* push it
+Or track existing repo (deploy using webhooks):
+    
+    $ ssh -p 23 nodejs@localhost pod remote myapp https://github.com/myuser/foo.git
 
-voila!
+Clone repo
+ 
+    $ git clone ssh://nodejs@localhost:23/srv/apps/myapp
+    Cloning into 'myapp'...
+    Checking connectivity... done
+
+Now `git push` will deploy your app :D
+Tail logs:
+
+    $ ssh -p 23 nodejs@localhost podtail myapp
 
 > if this didn't make sense, please read the [pod docs](https://github.com/yyx990803/pod#using-a-remote-github-repo)
 

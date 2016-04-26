@@ -9,4 +9,5 @@ if -n $QUEUE
     npm install --production
     npm install rsmq-cli
     ln -s $(pwd)/node_modules/.bin/rsmq /usr/bin/queue
+    ln -s $(pwd)/node_modules/.bin/rsmq /usr/bin/rsmq
   redis-server & 

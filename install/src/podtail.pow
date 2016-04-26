@@ -1,0 +1,14 @@
+usage()
+  echo 'podtail <app>'
+
+if ! -n $1
+  usage && exit 0
+
+outfile=$( ls ~/.pm2/logs/$1-out*.log | tail -n1 )
+errfile=${outfile/-out/-error}
+
+if ! -f $errfile
+  touch $errfile
+
+set -x
+tail -f $outfile $errfile

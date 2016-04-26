@@ -95,6 +95,8 @@ install_ssh nodejs nodejs
 ln -fs /srv/apps /home/nodejs/.
 npm install -g pod
 ln -s /home/nodejs/.podrc /root/.podrc
+cp /install/podtail /usr/bin/podtail
+chmod 755 /usr/bin/podtail
 
 echo -e "\nnode POD\n" > /etc/motd
 
