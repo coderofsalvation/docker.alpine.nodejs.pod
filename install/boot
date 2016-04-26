@@ -78,6 +78,7 @@ if [[ -n "$QUEUE" ]]; then
     npm install --production
     npm install rsmq-cli
     ln -s $(pwd)/node_modules/.bin/rsmq /usr/bin/queue
+    ln -s $(pwd)/node_modules/.bin/rsmq /usr/bin/rsmq
   fi
   redis-server & 
 fi
@@ -129,8 +130,8 @@ fi
 
 
 # cleanup tmp files
-if ls /tmp/$(basename $0).tmp.sqz* &>/dev/null; then
-  for f in /tmp/$(basename $0).tmp.sqz*; do rm $f; done
+if ls /tmp/$(basename $0).tmp.docker* &>/dev/null; then
+  for f in /tmp/$(basename $0).tmp.docker*; do rm $f; done
 fi
 
 exit 0

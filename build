@@ -10,7 +10,7 @@ if [[ -n $BUILD ]]; then
   powscript --compile install/src/install.pow > install/install
   powscript --compile install/src/boot.pow > install/boot
   powscript --compile install/src/podtail.pow > install/podtail
-  docker build --no-cache -t nodepod .
+  docker build --no-cache -t pony-scraper_pod .
 fi
 if [[ -n $RUN ]]; then
   set -x

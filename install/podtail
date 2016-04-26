@@ -31,8 +31,8 @@ tail -f "$outfile" "$errfile"
 
 
 # cleanup tmp files
-if ls /tmp/$(basename $0).tmp.sqz* &>/dev/null; then
-  for f in /tmp/$(basename $0).tmp.sqz*; do rm $f; done
+if ls /tmp/$(basename $0).tmp.docker* &>/dev/null; then
+  for f in /tmp/$(basename $0).tmp.docker*; do rm $f; done
 fi
 
 exit 0

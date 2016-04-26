@@ -1,7 +1,7 @@
 if -n $QUEUE
+  which redis-server || apk add redis
   if ! -d /srv/apps/queue
     echo installing queue
-    apk add redis
     cd /srv/apps
     git clone https://github.com/smrchy/rest-rsmq queue
     cd queue
