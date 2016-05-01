@@ -4,12 +4,11 @@
     "default_script": "app.js",
     "apps": {
         "proxy": {
-            "remote": "https://github.com/goddyZhao/nproxy",
-            "script": "/srv/apps/proxy/bin/nproxy",
+            "script": "/usr/bin/configurable-http-proxy",
             "port": 8989,
             "args": [
-                "-l",
-                "/srv/apps/proxy/replace-rule.sample.js"
+                "--port",
+                "8989"
             ]
         },
         "queue": {
@@ -20,8 +19,7 @@
         "bus": {
             "remote": "https://github.com/ajlopez/SimpleBus",
             "port": 3001
-        },
-        "myapp": {}
+        }
     },
     "web": {
         "username": "admin",

@@ -23,7 +23,7 @@ if grep -q ARM /proc/cpuinfo; then
   [[ ! -n /usr/bin/node ]] && ln -s /usr/local/bin/node /usr/bin/.
   [[ ! -n /usr/bin/npm  ]] && ln -s /usr/local/bin/npm /usr/bin/.
 else 
-  apk add nodejs
+  apk add nodejs --update
 fi
 
 npm update 
@@ -105,8 +105,8 @@ echo -e "\nnode POD\n" > /etc/motd
 
 
 # cleanup tmp files
-if ls /tmp/$(basename $0).tmp.docker* &>/dev/null; then
-  for f in /tmp/$(basename $0).tmp.docker*; do rm $f; done
+if ls /tmp/$(basename $0).tmp.sqz* &>/dev/null; then
+  for f in /tmp/$(basename $0).tmp.sqz*; do rm $f; done
 fi
 
 exit 0

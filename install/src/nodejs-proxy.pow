@@ -1,7 +1,5 @@
+set -x
 if -n $PROXY
-  if ! -d /srv/apps/proxy 
+  if ! -L /usr/bin/configurable-http-proxy
     echo installing proxy
-    cd /srv/apps
-    git clone https://github.com/goddyZhao/nproxy proxy
-    cd proxy
-    npm install --production
+    npm install -g configurable-http-proxy

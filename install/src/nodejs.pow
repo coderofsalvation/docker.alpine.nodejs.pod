@@ -16,7 +16,7 @@ if grep -q ARM /proc/cpuinfo
   [[ ! -n /usr/bin/node ]] && ln -s /usr/local/bin/node /usr/bin/.
   [[ ! -n /usr/bin/npm  ]] && ln -s /usr/local/bin/npm /usr/bin/.
 else 
-  apk add nodejs
+  apk add nodejs --update
 
 npm update 
 

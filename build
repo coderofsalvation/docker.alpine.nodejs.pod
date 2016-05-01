@@ -6,11 +6,11 @@ if [[ -n $BUILD ]]; then
     wget "https://raw.githubusercontent.com/coderofsalvation/powscript/master/powscript" 
     chmod 755 powscript
   }
-
-  powscript --compile install/src/install.pow > install/install
-  powscript --compile install/src/boot.pow > install/boot
-  powscript --compile install/src/podtail.pow > install/podtail
-  docker build --no-cache -t pony-scraper_pod .
+  [[ ! -f install/install ]] && powscript --compile install/src/install.pow > install/install
+  [[ ! -f install/boot    ]] && powscript --compile install/src/boot.pow > install/boot
+  [[ ! -f install/podtail ]] && powscript --compile install/src/podtail.pow > install/podtail
+  chmod 755 install/*
+  docker build --no-cache -t nodepod .
 fi
 if [[ -n $RUN ]]; then
   set -x
@@ -27,6 +27,7 @@ if [[ -n $RUN ]]; then
     --env=ROOTPASSWD=test                            \
     --env=PASSWD=test                                \
     --env=HOSTNAME=nodepod                           \
+    --env=CONFIGPROXY_AUTH_TOKEN=test                \
     -p 23:22                                         \
     -p 81:8989                                       \
     -p 19999:19999                                   \

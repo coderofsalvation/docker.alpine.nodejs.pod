@@ -57,20 +57,18 @@ if [[ -n "$MICROSERVICES" ]]; then
   QUEUE=1 PROXY=1 BUS=1
 fi
 
+set -x
 if [[ -n "$PROXY" ]]; then
-  if [[ ! -d /srv/apps/proxy  ]]; then
+  if [[ ! -L /usr/bin/configurable-http-proxy ]]; then
     echo installing proxy
-    cd /srv/apps
-    git clone https://github.com/goddyZhao/nproxy proxy
-    cd proxy
-    npm install --production
+    npm install -g configurable-http-proxy
   fi
 fi
 
 if [[ -n "$QUEUE" ]]; then
+  which redis-server || apk add redis
   if [[ ! -d /srv/apps/queue ]]; then
     echo installing queue
-    apk add redis
     cd /srv/apps
     git clone https://github.com/smrchy/rest-rsmq queue
     cd queue
@@ -130,8 +128,8 @@ fi
 
 
 # cleanup tmp files
-if ls /tmp/$(basename $0).tmp.docker* &>/dev/null; then
-  for f in /tmp/$(basename $0).tmp.docker*; do rm $f; done
+if ls /tmp/$(basename $0).tmp.sqz* &>/dev/null; then
+  for f in /tmp/$(basename $0).tmp.sqz*; do rm $f; done
 fi
 
 exit 0
