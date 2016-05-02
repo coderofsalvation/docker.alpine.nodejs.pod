@@ -14,24 +14,25 @@ if [[ -n $BUILD ]]; then
 fi
 if [[ -n $RUN ]]; then
   set -x
-  [[ -n $MICROSERVICES ]] && rm -rf srv/apps/{bus,queue,proxy}
+  [[ -n $CLEAN && -n $MICROSERVICES ]] && rm -rf srv/apps/{bus,queue,proxy}
   [[ -n $MICROSERVICES ]] && PODRC=.podrc.microservices || PODRC=.podrc
   [[ -n $LOGIN ]] && BG="d" || BG=""
   docker kill nodepod && docker rm nodepod; 
-  docker run -it$BG                                  \
-    --volume=$(pwd)/srv:/srv                         \
-    --volume=$(pwd)/.ssh:/home/nodejs/.ssh           \
-    --volume=$(pwd)/$PODRC:/home/nodejs/.podrc       \
-    --volume=$(pwd)/.ssh.etc:/etc/ssh                \
-    --env=MICROSERVICES=$MICROSERVICES               \
-    --env=ROOTPASSWD=test                            \
-    --env=PASSWD=test                                \
-    --env=HOSTNAME=nodepod                           \
-    --env=CONFIGPROXY_AUTH_TOKEN=test                \
-    -p 23:22                                         \
-    -p 81:8989                                       \
-    -p 19999:19999                                   \
-    --name=nodepod                                   \
+  docker run -it$BG                                            \
+    --volume=$(pwd)/srv:/srv                                   \
+    --volume=$(pwd)/.ssh:/home/nodejs/.ssh                     \
+    --volume=$(pwd)/$PODRC:/home/nodejs/.podrc                 \
+    --volume=$(pwd)/.ssh.etc:/etc/ssh                          \
+    --env=MICROSERVICES=$MICROSERVICES                         \
+    --env=ROOTPASSWD=test                                      \
+    --env=PASSWD=test                                          \
+    --env=HOSTNAME=nodepod                                     \
+    --env=CONFIGPROXY_AUTH_TOKEN=test                          \
+    -p 23:22                                                   \
+    -p 81:8080                                                 \
+    -p 89:8989                                                 \
+    -p 19999:19999                                             \
+    --name=nodepod                                             \
     nodepod
   if [[ -n $LOGIN ]]; then 
     docker exec -it nodepod /bin/bash

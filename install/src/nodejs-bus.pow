@@ -5,4 +5,4 @@ if -n $BUS
     git clone https://github.com/ajlopez/SimpleBus bus
     cd bus
     npm install --production
-    echo -e "var simplebus = require('./.');\nvar bus = simplebus.createBus();\nvar server = simplebus.createServer(bus, 3001);\nserver.start()" > app.js
+    echo -e "var simplebus = require('./.');\nvar bus = simplebus.createBus(1);\nvar server = simplebus.createServer(bus, 3001);\nserver.start()" > app.js

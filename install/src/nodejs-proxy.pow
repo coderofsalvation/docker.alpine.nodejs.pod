@@ -1,5 +1,9 @@
-set -x
 if -n $PROXY
-  if ! -L /usr/bin/configurable-http-proxy
+  if ! -d /srv/apps/proxy 
     echo installing proxy
-    npm install -g configurable-http-proxy
+    cd /srv/apps
+    git clone https://github.com/donasaur/http-proxy-rules proxy
+    cd proxy
+    npm install
+    mv index.js proxy.js
+    ln -s ../proxytable.js index.js

@@ -4,22 +4,24 @@
     "default_script": "app.js",
     "apps": {
         "proxy": {
-            "script": "/usr/bin/configurable-http-proxy",
-            "port": 8989,
-            "args": [
-                "--port",
-                "8989"
-            ]
+            "remote": "https://github.com/donasaur/http-proxy-rules",
+            "script": "/srv/apps/proxy/index.js",
+            "NODE_PATH": "/srv/apps/proxy/node_modules",
+            "port": 8080
         },
         "queue": {
             "remote": "https://github.com/smrchy/rest-rsmq",
+            "cwd": "/srv/apps/queue",
             "script": "/srv/apps/queue/server.js",
             "port": 3000
         },
         "bus": {
             "remote": "https://github.com/ajlopez/SimpleBus",
-            "port": 3001
-        }
+            "port": 3001,
+            "cwd": "/srv/apps/queue",
+            "script": "/srv/apps/bus/app.js"
+        },
+        "microservice": {}
     },
     "web": {
         "username": "admin",
