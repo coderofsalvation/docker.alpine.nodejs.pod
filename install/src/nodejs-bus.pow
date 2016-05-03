@@ -2,7 +2,7 @@ if -n $BUS
   if ! -d /srv/apps/bus
     echo installing bus
     cd /srv/apps
-    git clone https://github.com/ajlopez/SimpleBus bus
+    git clone https://github.com/coderofsalvation/simplebus bus
     cd bus
     npm install --production
     echo -e "var simplebus = require('./.');\nvar bus = simplebus.createBus(1);\nvar server = simplebus.createServer(bus, 3001);\nserver.start()" > app.js

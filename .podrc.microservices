@@ -20,8 +20,7 @@
             "port": 3001,
             "cwd": "/srv/apps/queue",
             "script": "/srv/apps/bus/app.js"
-        },
-        "microservice": {}
+        }
     },
     "web": {
         "username": "admin",

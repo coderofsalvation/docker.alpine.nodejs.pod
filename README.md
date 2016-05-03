@@ -2,7 +2,7 @@
 
 Easy git push deploy (& microservice architecture) in a docker.
 
-## Usage 
+## Usage: simple 
 
 look at [build](build) 
 
@@ -12,13 +12,14 @@ look at [build](build)
 
 This will build and run a docker which has pod & ssh pre-installed.
     
-    $ RUN=1 MICROSERVICES=1 BUILD=1 LOGIN=1 ./build 
+    $ RUN=1 BUILD=1 LOGIN=1 ./build 
 
-> if you just want a plain pod: Leave out `MICROSERVICES=1` and remove the `.microservices'-part from the `.podrc` volume
+## Advanced: microservices 
 
-## Read this if you like easy-peasy microservices 
+Continue reading if you like easy-peasy microservices. 
+This is what you can get by adding one environmentvariable: MICROSERVICES=1
 
-This is what you can get by adding one environmentvariable:
+    $ MICROSERVICES=1 BUILD=1 RUN=1 LOGIN=1 ./build 
 
 
                            bb/github   gitrepo        pod REST       pod web  
@@ -96,19 +97,16 @@ Tail logs:
 
 ## http proxy
 
-The [proxy](https://npmjs.org/package/nproxy) runs on port 8989.
-to preinstall a http proxy in pod, make sure:
-
-* `ENV PROXY=1` is set in Dockerfile before building
-* `--volume=$(pwd)/.podrc.microservices:/home/nodejs/.podrc` is passed in `docker run` instead of `.podrc`
-* run `ln -s srv/apps/proxy/replace-rule.sample.js proxy.js` outside the docker for convenience editing
-* use `pod restart proxy` to reload the proxy
+The [proxy](https://npmjs.org/package/http-proxy-rules) runs on port 8989.
+to preinstall a http proxy in pod.
+You can edit `srv/apps/proxytable.js` to update routes.
 
 ## queue 
 
 [Lightweight queue](https://npmjs.org/package/rsmq) which allows microservices to act as distributed producers/consumers.
 It uses redis at port 6379, has a cli (`queue --help`) and a [REST api](https://npmjs.org/package/rest-rsmq) at port 3000.
 
+* [microservice example](https://github.com/coderofsalvation/pod.microservice)
 * [example producer .js code](https://npmjs.org/package/rsmq)
 * [example consumer .js code](https://npmjs.org/package/rsmq-worker)
 
@@ -117,6 +115,7 @@ It uses redis at port 6379, has a cli (`queue --help`) and a [REST api](https://
 [Lightweight pub/sub bus](https://npmjs.org/package/simplebus) which allows microservices to act as distributed publishers/subscribers.
 It runs at port 3001.
 
+* [microservice example](https://github.com/coderofsalvation/pod.microservice)
 * [example publisher ,js code](https://github.com/ajlopez/SimpleBus/blob/master/samples/Market/operator.js)
 * [example subscriber .js code](https://github.com/ajlopez/SimpleBus/blob/master/samples/Market/subscriber.js)
 
