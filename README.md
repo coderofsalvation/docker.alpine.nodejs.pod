@@ -1,6 +1,6 @@
 # Pod (microservices) docker
 
-Easy [Pod (git push deploy)](https://github.com/yyx990803/pod) (& microservice architecture) in a docker.
+Easy pm2-powered [Pod (git push deploy)](https://github.com/yyx990803/pod) (& microservice architecture) in a docker.
 
 ## Usage: simple 
 
