@@ -4,6 +4,6 @@ if -n $PROXY
     cd /srv/apps
     git clone https://github.com/donasaur/http-proxy-rules proxy
     cd proxy
-    npm install
+    npm install --production
     mv index.js proxy.js
     ln -s ../proxytable.js index.js
