@@ -1,0 +1,39 @@
+#!/bin/bash
+set -e                 # halt on error
+set +m                 #
+shopt -s lastpipe      # flexible while loops (maintain scope)
+shopt -s extglob       # regular expressions
+path="$(pwd)"
+selfpath="$( dirname "$(readlink -f "$0")" )"
+tmpfile="/tmp/$(basename $0).tmp.$(whoami)"
+
+
+usage(){
+  echo 'podtail <app>'
+}
+
+if [[ ! -n "$1" ]]; then
+  usage && exit 0
+fi
+
+outfile=$( ls ~/.pm2/logs/$1-out*.log | tail -n1 )
+errfile=${outfile/-out/-error}
+
+if [[ ! -f "$errfile" ]]; then
+  touch "$errfile"
+fi
+
+set -x
+tail -f "$outfile" "$errfile"
+
+# wait for all async child processes (because "await ... then" is used in powscript)
+[[ $ASYNC == 1 ]] && wait
+
+
+# cleanup tmp files
+if ls /tmp/$(basename $0).tmp.sqz* &>/dev/null; then
+  for f in /tmp/$(basename $0).tmp.sqz*; do rm $f; done
+fi
+
+exit 0
+

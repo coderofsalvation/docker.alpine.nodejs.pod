@@ -1,0 +1,113 @@
+#!/bin/bash
+set -e                 # halt on error
+set +m                 #
+shopt -s lastpipe      # flexible while loops (maintain scope)
+shopt -s extglob       # regular expressions
+path="$(pwd)"
+selfpath="$( dirname "$(readlink -f "$0")" )"
+tmpfile="/tmp/$(basename $0).tmp.$(whoami)"
+
+
+motd='
+  POD nodejs
+'
+echo "$motd" > /etc/motd
+
+
+if grep -q ARM /proc/cpuinfo; then
+	apk add c-ares libstdc++ libuv
+	cd /
+	curl -L "https://github.com/coderofsalvation/alpine-node-arm/raw/master/node-v4.1.1-armhf-alpinelinux.tar.gz" > node-v4.1.1-armhf-alpinelinux.tar.gz
+	tar -zxvf node-v4.1.1-armhf-alpinelinux.tar.gz
+	rm node-v4.1.1-armhf-alpinelinux.tar.gz
+  [[ ! -n /usr/bin/node ]] && ln -s /usr/local/bin/node /usr/bin/.
+  [[ ! -n /usr/bin/npm  ]] && ln -s /usr/local/bin/npm /usr/bin/.
+else 
+  apk add nodejs --update
+fi
+
+npm update 
+
+addgroup nodejs
+adduser -s /bin/bash -G nodejs nodejs -s /bin/bash -D
+
+DAEMON=sshd
+
+install_ssh(){
+  local group="$1"
+  local user="$2"
+  which sshd || apk add openssh
+  if [[ ! -d /home/$user/.ssh ]]; then
+    mkdir /home/$user/.ssh
+  fi
+  touch /home/$user/.ssh/authorized_keys
+  chmod 700 /home/$user/.ssh/authorized_keys
+  chown "$user":$group -R /home/$user/.ssh
+  # Fix permissions, if writable
+  #if -w ~/.ssh
+  #    chown -R root:root ~/.ssh && chmod 700 ~/.ssh/ && chmod 600 ~/.ssh/*
+}
+
+ssh_stop(){
+  echo "Received SIGINT or SIGTERM. Shutting down "$DAEMON""
+  # Get PID
+  pid=$(cat /var/run/$DAEMON/$DAEMON.pid)
+  # Set TERM
+  kill -SIGTERM "${pid}"
+  # Wait for exit
+  wait "${pid}"
+  # All done.
+  echo "Done."
+}
+
+
+ssh_start() {
+  # generate ssh config in not present
+  if [[ ! -f /etc/ssh/sshd_config ]]; then
+    ssh-keygen -A
+    # open ssh port 22
+    echo -e "Port 22\n" >> /etc/ssh/sshd_config
+  fi
+  echo "starting ssh"
+  trap ssh_stop SIGINT SIGTERM
+  echo /usr/sbin/sshd -D -f /etc/ssh/sshd_config
+  exec /usr/sbin/sshd -D -f /etc/ssh/sshd_config
+  pid="$!"
+  mkdir -p /var/run/$DAEMON && echo "${pid}" > /var/run/$DAEMON/$DAEMON.pid
+  wait "${pid}" && exit $?
+}
+
+install_git(){
+  local name="$1"
+  local username="$2"
+  local group="$3"
+  apk add --update git
+  echo -e "[user]\n\tname = "$name"\n\temail = noreply@$name" > /home/$username/.gitconfig
+  chown "$username":$group /home/$username/.gitconfig
+}
+
+
+
+
+install_git nodepod nodejs nodejs
+install_ssh nodejs nodejs
+
+ln -fs /srv/apps /home/nodejs/.
+npm install -g pod
+ln -s /home/nodejs/.podrc /root/.podrc
+cp /install/podtail /usr/bin/podtail
+chmod 755 /usr/bin/podtail
+
+echo -e "\nnode POD\n" > /etc/motd
+
+# wait for all async child processes (because "await ... then" is used in powscript)
+[[ $ASYNC == 1 ]] && wait
+
+
+# cleanup tmp files
+if ls /tmp/$(basename $0).tmp.sqz* &>/dev/null; then
+  for f in /tmp/$(basename $0).tmp.sqz*; do rm $f; done
+fi
+
+exit 0
+
