@@ -87,13 +87,17 @@ Clone repo
 Now `git push` will deploy your app :D
 Tail logs:
 
-    $ ssh -p 23 nodejs@localhost podtail myapp
+    $ ssh -p 23 nodejs@localhost podtail myservice
 
 Or [track an existing repo](https://github.com/yyx990803/pod/wiki/Using-a-remote-repo)
     
-    $ ssh -p 23 nodejs@localhost pod remote myapp https://github.com/myuser/foo.git
+    $ ssh -p 23 nodejs@localhost pod remote myservice https://github.com/myuser/foo.git
 
 > if something didn't make sense, please read the [pod docs](https://github.com/yyx990803/pod#using-a-remote-github-repo)
+
+## Example Microservice
+
+To give you a headstart: this [example repo](https://github.com/coderofsalvation/pod.microservice) includes all the facilities mentioned below.
 
 ## http proxy
 
@@ -119,3 +123,7 @@ It runs at port 3001.
 * [example subscriber .js code](https://github.com/ajlopez/SimpleBus/blob/master/samples/Market/subscriber.js)
 
 > NOTE: redis can also be used for pub/sub behaviour
+
+## Pod overview 
+
+go to http://your.url:19999 when the container is running (login/pw: admin/test).

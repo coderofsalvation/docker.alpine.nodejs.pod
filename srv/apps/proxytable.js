@@ -5,7 +5,6 @@ var http = require('http'),
 // Set up proxy rules instance
 var proxyRules = new HttpProxyRules({
   rules: {
-    '/pod':              'http://localhost:19999', 
     '/queue':            'http://localhost:3000', 
   },
   default: 'http://localhost:8080' // default target
