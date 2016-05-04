@@ -68,7 +68,7 @@ A bit of bash tells a thousands words:
       queue      ON          3000      0             2d 05:54:52      58.24 mb      0.00% 
       bus        ON          3001      0             2d 05:54:54      31.30 mb      0.00% 
 
-## creating & deploygin  a new microservice
+## creating & deploying a new microservice
 
 You can create repos locally:
 
