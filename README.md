@@ -1,6 +1,6 @@
 # Pod (microservices) docker
 
-Easy git push deploy (& microservice architecture) in a docker.
+Easy [Pod (git push deploy)](https://github.com/yyx990803/pod) (& microservice architecture) in a docker.
 
 ## Usage: simple 
 
@@ -70,17 +70,13 @@ A bit of bash tells a thousands words:
 
 ## creating & deploygin  a new microservice
 
-Create remote repo
+You can create repos locally:
 
     $ ssh -p 23 nodejs@localhost pod create myapp
     POD updated config.
     POD created bare repo at /srv/repos/myapp.git
     POD created post-receive hook.
     POD created empty working copy at /srv/apps/myapp
-
-Or track existing repo (deploy using webhooks):
-    
-    $ ssh -p 23 nodejs@localhost pod remote myapp https://github.com/myuser/foo.git
 
 Clone repo
  
@@ -93,12 +89,15 @@ Tail logs:
 
     $ ssh -p 23 nodejs@localhost podtail myapp
 
-> if this didn't make sense, please read the [pod docs](https://github.com/yyx990803/pod#using-a-remote-github-repo)
+Or [track an existing repo](https://github.com/yyx990803/pod/wiki/Using-a-remote-repo)
+    
+    $ ssh -p 23 nodejs@localhost pod remote myapp https://github.com/myuser/foo.git
+
+> if something didn't make sense, please read the [pod docs](https://github.com/yyx990803/pod#using-a-remote-github-repo)
 
 ## http proxy
 
-The [proxy](https://npmjs.org/package/http-proxy-rules) runs on port 8989.
-to preinstall a http proxy in pod.
+The [proxy](https://npmjs.org/package/http-proxy-rules) runs on port 8080.
 You can edit `srv/apps/proxytable.js` to update routes.
 
 ## queue 
