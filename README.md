@@ -102,7 +102,7 @@ You can edit `srv/apps/proxytable.js` to update routes.
 
 ## queue 
 
-[Lightweight queue](https://npmjs.org/package/rsmq) which allows microservices to act as distributed producers/consumers.
+Scale horizontally using the [Lightweight queue](https://npmjs.org/package/rsmq) which allows microservices to act as distributed producers/consumers.
 It uses redis at port 6379, has a cli (`queue --help`) and a [REST api](https://npmjs.org/package/rest-rsmq) at port 3000.
 
 * [microservice example](https://github.com/coderofsalvation/pod.microservice)
@@ -111,7 +111,7 @@ It uses redis at port 6379, has a cli (`queue --help`) and a [REST api](https://
 
 ## pub/sub bus
 
-[Lightweight pub/sub bus](https://npmjs.org/package/simplebus) which allows microservices to act as distributed publishers/subscribers.
+Scale horizontally using the [Lightweight pub/sub bus](https://npmjs.org/package/simplebus) which allows microservices to act as distributed publishers/subscribers.
 It runs at port 3001.
 
 * [microservice example](https://github.com/coderofsalvation/pod.microservice)
