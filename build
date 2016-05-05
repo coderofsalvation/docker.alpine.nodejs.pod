@@ -24,6 +24,7 @@ if [[ -n $RUN ]]; then
     --volume=$(pwd)/$PODRC:/home/nodejs/.podrc                 \
     --volume=$(pwd)/.ssh.etc:/etc/ssh                          \
     --env=MICROSERVICES=$MICROSERVICES                         \
+    --env=NPM_MODULES="$NPM_MODULES"                           \
     --env=ROOTPASSWD=test                                      \
     --env=PASSWD=test                                          \
     --env=HOSTNAME=nodepod                                     \

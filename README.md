@@ -14,11 +14,11 @@ This will build and run a docker which has pod & ssh pre-installed.
     
     $ RUN=1 BUILD=1 LOGIN=1 ./build 
 
-## Advanced: microservices 
+to install global npm_modules:
 
-Continue reading if you like easy-peasy microservices. 
-This is what you can get by adding one environmentvariable: MICROSERVICES=1
+    $ NPM_MODULES="typescript coffeescript" BUILD=1 LOGIN=1 ./build
 
+#
     $ MICROSERVICES=1 BUILD=1 RUN=1 LOGIN=1 ./build 
 
 
@@ -45,19 +45,21 @@ This is what you can get by adding one environmentvariable: MICROSERVICES=1
 A bit of bash tells a thousands words:
 
     $ BUILD=1 ./build
-    > docker run --name=nodepod -itd                           
-    > --volume=$(pwd)/srv:/srv                                 
-    > --volume=$(pwd)/.ssh:/home/nodejs/.ssh                   
-    > --volume=$(pwd)/.podrc.microservices:/home/nodejs/.podrc 
-    > --volume=$(pwd)/.ssh.etc:/etc/ssh                        
-    > --env=ROOTPASSWD=test                                    
-    > --env=MICROSERVICES=1                                    
-    > --env=PASSWD=test                                        
-    > --env=HOSTNAME=nodepod                                   
-    > -p 23:22                                                 
-    > -p 81:8989
-    > -p 19999:19999                                           
-    > nodepod                                                  
+    $ docker run                                                 \
+      --volume=$(pwd)/srv:/srv                                   \
+      --volume=$(pwd)/.ssh:/home/nodejs/.ssh                     \
+      --volume=$(pwd)/$PODRC:/home/nodejs/.podrc                 \
+      --volume=$(pwd)/.ssh.etc:/etc/ssh                          \
+      --env=MICROSERVICES=$MICROSERVICES                         \
+      --env=NPM_MODULES=$NPM_MODULES                             \
+      --env=ROOTPASSWD=test                                      \
+      --env=PASSWD=test                                          \
+      --env=HOSTNAME=nodepod                                     \
+      --env=CONFIGPROXY_AUTH_TOKEN=test                          \
+      -p 23:22                                                   \
+      -p 81:8080                                                 \
+      -p 19999:19999                                             \
+      --name=nodepod                                             \
 
     $ ssh -p 23 nodejs@localhost pod list 
     Password: test

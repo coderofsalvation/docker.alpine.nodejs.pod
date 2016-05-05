@@ -63,7 +63,7 @@ if [[ -n "$PROXY" ]]; then
     cd /srv/apps
     git clone https://github.com/donasaur/http-proxy-rules proxy
     cd proxy
-    npm install
+    npm install --production
     mv index.js proxy.js
     ln -s ../proxytable.js index.js
   fi
@@ -110,6 +110,10 @@ echo "root:$ROOTPASSWD" | chpasswd
 echo "nodejs:$PASSWD" | chpasswd
 
 chown nodejs:nodejs -R /srv
+
+if [[ -n "$NPM_MODULES" ]]; then
+  npm install -g ${NPM_MODULES}
+fi
 
 ssh_start &
 
