@@ -48,10 +48,10 @@ A bit of bash tells a thousands words:
     $ docker run                                                 \
       --volume=$(pwd)/srv:/srv                                   \
       --volume=$(pwd)/.ssh:/home/nodejs/.ssh                     \
-      --volume=$(pwd)/$PODRC:/home/nodejs/.podrc                 \
+      --volume=$(pwd)/.podrc.microservices:/home/nodejs/.podrc   \
       --volume=$(pwd)/.ssh.etc:/etc/ssh                          \
-      --env=MICROSERVICES=$MICROSERVICES                         \
-      --env=NPM_MODULES=$NPM_MODULES                             \
+      --env=MICROSERVICES=1                                      \
+      --env=NPM_MODULES="coffeescript purescript"                \
       --env=ROOTPASSWD=test                                      \
       --env=PASSWD=test                                          \
       --env=HOSTNAME=nodepod                                     \
