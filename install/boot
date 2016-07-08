@@ -74,7 +74,7 @@ if [[ -n "$QUEUE" ]]; then
   if [[ ! -d /srv/apps/queue ]]; then
     echo installing queue
     cd /srv/apps
-    git clone https://github.com/smrchy/rest-rsmq queue
+    git clone https://github.com/coderofsalvation/rest-rsmq queue
     cd queue
     sed -i 's/8101/3000/g' server.js
     npm install --production
