@@ -1,6 +1,7 @@
 # powscript source
 # see: https://github.com/coderofsalvation/powscript
 # run: powscript --compile install.pow > install
+apk update
 
 require 'nodejs.pow'
 require 'ssh.pow'

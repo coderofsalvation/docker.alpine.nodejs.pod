@@ -1,3 +1,5 @@
+apk update
+
 require 'ssh.pow'
 require 'microservices.pow'
 require 'nodejs-proxy.pow'
@@ -17,15 +19,16 @@ chown nodejs:nodejs -R /srv
 
 ssh_start &
 
-su -c "$(which node) $(which pod) startall &" nodejs
+su -c "$(which pod)" nodejs
 su -c "$(which pm2) logs &" nodejs
 sleep 3s
 su -c "$(which pod) web start &" nodejs
 
-if -n $BUS
-  su -c 'pod start bus' nodejs
-if -n $PROXY
-  su -c 'pod start proxy' nodejs
-if -n $QUEUE
-  su -c 'pod start queue' nodejs
+#if -n $BUS
+#  su -c 'pod start bus' nodejs
+#if -n $PROXY
+#  su -c 'pod start proxy' nodejs
+#if -n $QUEUE
+#  su -c 'pod start queue' nodejs
 
+su -c "$(which pod) startall" nodejs

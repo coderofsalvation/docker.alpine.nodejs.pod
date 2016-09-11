@@ -34,8 +34,8 @@ adduser -s /bin/bash -G nodejs nodejs -s /bin/bash -D
 DAEMON=sshd
 
 install_ssh(){
-  local group="$1"
-  local user="$2"
+  local group="${1}"
+  local user="${2}"
   which sshd || apk add openssh
   if [[ ! -d /home/$user/.ssh ]]; then
     mkdir /home/$user/.ssh
@@ -78,15 +78,16 @@ ssh_start() {
 }
 
 install_git(){
-  local name="$1"
-  local username="$2"
-  local group="$3"
+  local name="${1}"
+  local username="${2}"
+  local group="${3}"
   apk add --update git
   echo -e "[user]\n\tname = "$name"\n\temail = noreply@$name" > /home/$username/.gitconfig
   chown "$username":$group /home/$username/.gitconfig
 }
 
 
+apk update
 
 
 install_git nodepod nodejs nodejs
@@ -105,8 +106,8 @@ echo -e "\nnode POD\n" > /etc/motd
 
 
 # cleanup tmp files
-if ls /tmp/$(basename $0).tmp.docker* &>/dev/null; then
-  for f in /tmp/$(basename $0).tmp.docker*; do rm $f; done
+if ls /tmp/$(basename $0).tmp.sqz* &>/dev/null; then
+  for f in /tmp/$(basename $0).tmp.sqz*; do rm $f; done
 fi
 
 exit 0

@@ -15,6 +15,6 @@ RUN apk add --update bash curl openssh ca-certificates && bash /install/install
 #VOLUME .ssh /home/nodejs/.ssh
 #VOLUME .podrc /home/nodejs/.podrc
 
-EXPOSE 22 80 19999 
+EXPOSE 22 80 19999 3000 3001
 
 CMD [ "sh","-c","ROOTPASSWD=$ROOTPASSWD PASSWD=$PASSWD HOSTNAME=$HOSTNAME /install/boot ; cat" ]

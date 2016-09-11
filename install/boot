@@ -10,8 +10,8 @@ tmpfile="/tmp/$(basename $0).tmp.$(whoami)"
 DAEMON=sshd
 
 install_ssh(){
-  local group="$1"
-  local user="$2"
+  local group="${1}"
+  local user="${2}"
   which sshd || apk add openssh
   if [[ ! -d /home/$user/.ssh ]]; then
     mkdir /home/$user/.ssh
@@ -98,6 +98,8 @@ if [[ -n "$BUS" ]]; then
 fi
 
 
+apk update
+
 
 if [[ ! -n "$PASSWD" ]]; then
   echo "please pass '-e PASSWD=foo' to your docker cmd"
@@ -111,26 +113,15 @@ echo "nodejs:$PASSWD" | chpasswd
 
 chown nodejs:nodejs -R /srv
 
-if [[ -n "$NPM_MODULES" ]]; then
-  npm install -g ${NPM_MODULES}
-fi
-
 ssh_start &
 
-su -c "$(which node) $(which pod) startall &" nodejs
+su -c "$(which pod)" nodejs
 su -c "$(which pm2) logs &" nodejs
 sleep 3s
 su -c "$(which pod) web start &" nodejs
 
-if [[ -n "$BUS" ]]; then
-  su -c 'pod start bus' nodejs
-fi
-if [[ -n "$PROXY" ]]; then
-  su -c 'pod start proxy' nodejs
-fi
-if [[ -n "$QUEUE" ]]; then
-  su -c 'pod start queue' nodejs
-fi
+
+su -c "$(which pod) startall" nodejs
 
 # wait for all async child processes (because "await ... then" is used in powscript)
 [[ $ASYNC == 1 ]] && wait
