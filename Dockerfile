@@ -17,4 +17,4 @@ RUN apk add --update bash curl openssh ca-certificates && bash /install/install
 
 EXPOSE 22 80 19999 3000 3001
 
-CMD [ "sh","-c","ROOTPASSWD=$ROOTPASSWD PASSWD=$PASSWD HOSTNAME=$HOSTNAME /install/boot ; cat" ]
+CMD [ "sh","-c","apk update; ROOTPASSWD=$ROOTPASSWD PASSWD=$PASSWD HOSTNAME=$HOSTNAME /install/boot ; cat" ]
